@@ -17,6 +17,26 @@ namespace AnimeList.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+            modelBuilder.Entity<Anime>()
+                .HasIndex(x => x.MalId)
+                .IsUnique();
+
+            modelBuilder.Entity<Genre>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Studio>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Anime>()
+                .HasMany(x => x.Genres)
+                .WithMany(x => x.Animes);
+
+            modelBuilder.Entity<Anime>()
+                .HasMany(x => x.Studios)
+                .WithMany(x => x.Animes);
         }
 
         public override async Task<int> SaveChangesAsync (CancellationToken cancellationToken = default)

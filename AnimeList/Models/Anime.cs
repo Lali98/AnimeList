@@ -3,11 +3,13 @@
     public enum AnimeType
     {
         TV,
+        TV_Special,
         Movie,
         OVA,
         ONA,
         Special,
         Music,
+        PV,
         Unknown
     }
 
@@ -31,7 +33,6 @@
         public int? Episodes { get; set; }
         public int? Duration { get; set; }
         public float? MalScore { get; set; }
-        public int? FanSubId { get; set; }
         public List<FanSub> FanSubs { get; set; } = [];
         public List<Genre> Genres { get; set; } = [];
         public List<Studio> Studios { get; set; } = [];

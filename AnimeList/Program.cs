@@ -1,5 +1,6 @@
 using AnimeList.Commands;
 using AnimeList.Data;
+using AnimeList.Mapping;
 using AnimeList.Service;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -16,10 +17,20 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<MalApiService>();
+//builder.Services.AddScoped<MalApiService>();
+builder.Services.AddHttpClient<MalApiService>(client =>
+{
+    var malClientId = builder.Configuration["MyAnimeList:ClientId"];
+    client.BaseAddress = new Uri("https://api.myanimelist.net/v2/");
+    client.DefaultRequestHeaders.Add("User-Agent", "AnimeList/1.0");
+    client.DefaultRequestHeaders.Add("X-MAL-CLIENT-ID", malClientId);
+});
+
 builder.Services.AddScoped<AnimeImportService>();
 
 builder.Services.AddScoped<ImportCommand>();
+
+builder.Services.AddScoped<AnimeMapper>();
 
 var app = builder.Build();
 
