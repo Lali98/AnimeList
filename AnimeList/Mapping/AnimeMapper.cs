@@ -23,7 +23,7 @@ namespace AnimeList.Mapping
                 },
                 Type = ParseType(dto.MediaType),
                 ImageUrl = dto.Picture?.Medium,
-                TrailerUrls = [""],
+                TrailerUrls = null,
                 Year = dto.StartSeason?.Year,
                 Season = ParseSeason(dto.StartSeason?.Season),
                 Episodes = dto.NumEpisodes,

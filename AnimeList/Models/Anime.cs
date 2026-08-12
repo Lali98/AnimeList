@@ -1,5 +1,8 @@
-﻿namespace AnimeList.Models
+﻿using System.Text.Json.Serialization;
+
+namespace AnimeList.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter<AnimeType>))]
     public enum AnimeType
     {
         TV,
@@ -13,6 +16,7 @@
         Unknown
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter<AnimeSeason>))]
     public enum AnimeSeason
     {
         Winter,

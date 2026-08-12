@@ -2,6 +2,7 @@ using AnimeList.Commands;
 using AnimeList.Data;
 using AnimeList.Mapping;
 using AnimeList.Service;
+using AnimeList.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -27,8 +28,10 @@ builder.Services.AddHttpClient<MalApiService>(client =>
 });
 
 builder.Services.AddScoped<AnimeImportService>();
+builder.Services.AddScoped<IAnimeService, AnimeService>();
 
 builder.Services.AddScoped<ImportCommand>();
+builder.Services.AddScoped<UpdateScoreCommand>();
 
 builder.Services.AddScoped<AnimeMapper>();
 
@@ -43,6 +46,10 @@ if (args.Length > 0)
         case "import":
             var importCommand = scope.ServiceProvider.GetRequiredService<ImportCommand>();
             await importCommand.ExecuteAsync(args);
+            break;
+        case "update":
+            var updateCommand = scope.ServiceProvider.GetRequiredService<UpdateScoreCommand>();
+            await updateCommand.ExecuteAsync(args);
             break;
         default:
             Console.WriteLine("Ismeretlen parancs.");
