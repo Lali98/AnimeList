@@ -10,9 +10,7 @@ namespace AnimeList.Commands
         private readonly AppDbContext _db;
         private readonly MalApiService _mal;
 
-        public UpdateScoreCommand(
-            AppDbContext db,
-            MalApiService mal)
+        public UpdateScoreCommand(AppDbContext db, MalApiService mal)
         {
             _db = db;
             _mal = mal;
@@ -29,26 +27,47 @@ namespace AnimeList.Commands
                 switch (args[i].ToLower())
                 {
                     case "--mal-id":
-                        malId = int.Parse(args[++i]);
-                        break;
-
-                    case "--year":
-                        year = int.Parse(args[++i]);
-                        break;
-
-                    case "--season":
-                        if (!Enum.TryParse<AnimeSeason>(
-                            args[++i],
-                            true,
-                            out var parsedSeason))
+                        if (i + 1 >= args.Length)
                         {
-                            Console.WriteLine("Érvénytelen season.");
+                            Console.WriteLine("A --mal-id paraméterhez meg kell adni egy MAL ID-t.");
+                            return;
+                        }
+                        if (!int.TryParse(args[++i], out var parsedMalId))
+                        {
+                            Console.WriteLine("A --mal-id értéke érvénytelen.");
+                            return;
+                        }
+
+                        malId = parsedMalId;
+                        break;
+                    case "--year":
+                        if (i + 1 >= args.Length)
+                        {
+                            Console.WriteLine("A --year paraméterhez meg kell adni egy évet.");
+                            return;
+                        }
+                        if (!int.TryParse(args[++i], out var parsedYear))
+                        {
+                            Console.WriteLine("A --year értéke érvénytelen.");
+                            return;
+                        }
+
+                        year = parsedYear;
+                        break;
+                    case "--season":
+                        if (i + 1 >= args.Length)
+                        {
+                            Console.WriteLine("A --season paraméterhez meg kell adni egy évszakot.");
+                            return;
+                        }
+                        if (!Enum.TryParse<AnimeSeason>(args[++i], true, out var parsedSeason))
+                        {
+                            Console.WriteLine("Érvénytelen season. Használható: Winter, Spring, Summer, Fall.");
                             return;
                         }
 
                         season = parsedSeason;
                         break;
-
                     default:
                         Console.WriteLine($"Ismeretlen argumentum: {args[i]}");
                         return;
@@ -58,15 +77,18 @@ namespace AnimeList.Commands
             if (malId.HasValue && (year.HasValue || season.HasValue))
             {
                 Console.WriteLine("A --mal-id nem használható együtt a --year/--season paraméterekkel.");
-
                 return;
             }
 
-            if ((year.HasValue && !season.HasValue) ||
-                (!year.HasValue && season.HasValue))
+            if ((year.HasValue && !season.HasValue) || (!year.HasValue && season.HasValue))
             {
                 Console.WriteLine("A --year és --season paramétereket együtt kell használni.");
+                return;
+            }
 
+            if (!malId.HasValue && !year.HasValue && !season.HasValue)
+            {
+                Console.WriteLine("Meg kell adni egy keresési feltételt: --mal-id vagy --year + --season.");
                 return;
             }
 
@@ -89,24 +111,33 @@ namespace AnimeList.Commands
             if (animes.Count == 0)
             {
                 Console.WriteLine("Nincs találat a megadott paraméterekkel.");
-
                 return;
             }
 
             Console.WriteLine($"{animes.Count} anime frissítése...");
 
+            bool hasChanges = false;
+
             foreach (var anime in animes)
             {
                 try
                 {
-                    var malAnime =
-                        await _mal.GetAnimeByIdAsync(anime.MalId);
+                    await Task.Delay(1500);
+                    var malAnime = await _mal.GetAnimeByIdAsync(anime.MalId);
 
                     var oldScore = anime.MalScore;
+                    var newScore = malAnime.Mean;
 
-                    anime.MalScore = malAnime.Mean;
+                    if (oldScore == newScore)
+                    {
+                        Console.WriteLine($"= {anime.Titles.JpRomaji}: nincs változás ({oldScore})");
+                        continue;
+                    }
 
-                    Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldScore} -> {anime.MalScore}");
+                    anime.MalScore = newScore;
+                    hasChanges = true;
+
+                    Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldScore} -> {newScore}");
                 }
                 catch (Exception ex)
                 {
@@ -114,9 +145,15 @@ namespace AnimeList.Commands
                 }
             }
 
-            await _db.SaveChangesAsync();
-
-            Console.WriteLine("Frissítés befejezve.");
+            if (hasChanges)
+            {
+                await _db.SaveChangesAsync();
+                Console.WriteLine("Frissítés befejezve.");
+            }
+            else
+            {
+                Console.WriteLine("Nem volt szükség adatbázis-frissítésre.");
+            }
         }
     }
 }
