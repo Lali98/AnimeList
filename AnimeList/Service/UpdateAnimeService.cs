@@ -1,16 +1,15 @@
 ﻿using AnimeList.Data;
 using AnimeList.Models;
-using AnimeList.Service;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnimeList.Commands
+namespace AnimeList.Service
 {
-    public class UpdateScoreCommand(AppDbContext db, MalApiService mal)
+    public class UpdateAnimeService(AppDbContext db, MalApiService mal)
     {
         private readonly AppDbContext _db = db;
         private readonly MalApiService _mal = mal;
 
-        public async Task UpdateScore(string[] args)
+        public async Task Update(string[] args, string field)
         {
             int? malId = null;
             int? year = null;
@@ -119,19 +118,54 @@ namespace AnimeList.Commands
                     await Task.Delay(1500);
                     var malAnime = await _mal.GetAnimeByIdAsync(anime.MalId);
 
-                    var oldScore = anime.MalScore;
-                    var newScore = malAnime.Mean;
-
-                    if (oldScore == newScore)
+                    switch (field)
                     {
-                        Console.WriteLine($"= {anime.Titles.JpRomaji}: nincs változás ({oldScore})");
-                        continue;
+                        case "mal-score":
+                            var oldScore = anime.MalScore;
+                            var newScore = malAnime.Mean;
+
+                            if (oldScore == newScore)
+                            {
+                                Console.WriteLine($"= {anime.Titles.JpRomaji}: nincs változás ({oldScore})");
+                                continue;
+                            }
+
+                            anime.MalScore = newScore;
+                            hasChanges = true;
+
+                            Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldScore} -> {newScore}");
+                            break;
+                        case "image":
+                            var oldImage = anime.ImageUrl;
+                            var newImage = malAnime.Picture?.Medium;
+
+                            if (oldImage == newImage)
+                            {
+                                Console.WriteLine($"= {anime.Titles.JpRomaji}: nincs változás ({oldImage})");
+                                continue;
+                            }
+
+                            anime.ImageUrl = newImage;
+                            hasChanges = true;
+
+                            Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldImage} -> {newImage}");
+                            break;
+                        case "episode":
+                            var oldEpisode = anime.Episodes;
+                            var newEpisode = malAnime.NumEpisodes;
+
+                            if (oldEpisode == newEpisode)
+                            {
+                                Console.WriteLine($"= {anime.Titles.JpRomaji}: nincs változás ({oldEpisode})");
+                                continue;
+                            }
+
+                            anime.Episodes = newEpisode;
+                            hasChanges = true;
+
+                            Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldEpisode} -> {newEpisode}");
+                            break;
                     }
-
-                    anime.MalScore = newScore;
-                    hasChanges = true;
-
-                    Console.WriteLine($"~ {anime.Titles.JpRomaji}: {oldScore} -> {newScore}");
                 }
                 catch (Exception ex)
                 {

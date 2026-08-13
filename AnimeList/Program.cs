@@ -27,13 +27,16 @@ builder.Services.AddHttpClient<MalApiService>(client =>
     client.DefaultRequestHeaders.Add("X-MAL-CLIENT-ID", malClientId);
 });
 
+//Services
 builder.Services.AddScoped<AnimeImportService>();
 builder.Services.AddScoped<IAnimeService, AnimeService>();
+builder.Services.AddScoped<UpdateAnimeService>();
 
+//Commands
 builder.Services.AddScoped<ImportCommand>();
 builder.Services.AddScoped<UpdateCommand>();
-builder.Services.AddScoped<UpdateScoreCommand>();
 
+//Mapperes
 builder.Services.AddScoped<AnimeMapper>();
 
 var app = builder.Build();
