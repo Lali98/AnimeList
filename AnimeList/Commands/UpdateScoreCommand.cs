@@ -5,18 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimeList.Commands
 {
-    public class UpdateScoreCommand
+    public class UpdateScoreCommand(AppDbContext db, MalApiService mal)
     {
-        private readonly AppDbContext _db;
-        private readonly MalApiService _mal;
+        private readonly AppDbContext _db = db;
+        private readonly MalApiService _mal = mal;
 
-        public UpdateScoreCommand(AppDbContext db, MalApiService mal)
-        {
-            _db = db;
-            _mal = mal;
-        }
-
-        public async Task ExecuteAsync(string[] args)
+        public async Task UpdateScore(string[] args)
         {
             int? malId = null;
             int? year = null;

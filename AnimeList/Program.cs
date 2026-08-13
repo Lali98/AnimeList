@@ -31,6 +31,7 @@ builder.Services.AddScoped<AnimeImportService>();
 builder.Services.AddScoped<IAnimeService, AnimeService>();
 
 builder.Services.AddScoped<ImportCommand>();
+builder.Services.AddScoped<UpdateCommand>();
 builder.Services.AddScoped<UpdateScoreCommand>();
 
 builder.Services.AddScoped<AnimeMapper>();
@@ -48,7 +49,7 @@ if (args.Length > 0)
             await importCommand.ExecuteAsync(args);
             break;
         case "update":
-            var updateCommand = scope.ServiceProvider.GetRequiredService<UpdateScoreCommand>();
+            var updateCommand = scope.ServiceProvider.GetRequiredService<UpdateCommand>();
             await updateCommand.ExecuteAsync(args);
             break;
         default:
