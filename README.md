@@ -1,4 +1,4 @@
-# AnimeList
+# AnimeList (WIP)
 
 ![build-badge](https://img.shields.io/badge/build-passing-brightgreen) ![dotnet-10](https://img.shields.io/badge/.NET-10-blue)
 
