@@ -26,9 +26,9 @@ namespace AnimeList.Mapping
                 TrailerUrls = null,
                 Year = dto.StartSeason?.Year,
                 Season = ParseSeason(dto.StartSeason?.Season),
-                Episodes = dto.NumEpisodes,
+                Episodes = dto.NumEpisodes ?? null,
                 Duration = dto.AverageEpisodeDuration / 60,
-                MalScore = dto.Mean ?? 0,
+                MalScore = dto.Mean ?? null,
             };
         }
         private static AnimeType ParseType(string? type)
