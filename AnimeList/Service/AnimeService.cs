@@ -6,14 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimeList.Service
 {
-    public class AnimeService : IAnimeService
+    public class AnimeService(AppDbContext db) : IAnimeService
     {
-        private readonly AppDbContext _db;
-
-        public AnimeService(AppDbContext db)
-        {
-            _db = db;
-        }
+        private readonly AppDbContext _db = db;
 
         public async Task<List<AnimeResponseDto>> GetSeasonAsync(
             int year,

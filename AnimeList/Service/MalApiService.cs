@@ -4,14 +4,9 @@ using System.Text.Json;
 
 namespace AnimeList.Service
 {
-    public class MalApiService
+    public class MalApiService(HttpClient http)
     {
-        private readonly HttpClient _http;
-
-        public MalApiService(HttpClient http)
-        {
-            _http = http;
-        }
+        private readonly HttpClient _http = http;
 
         public async Task<MALSeasonResponseDto> GetSeasonAsync(int year, AnimeSeason season)
         {

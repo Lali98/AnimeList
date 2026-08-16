@@ -7,14 +7,9 @@ namespace AnimeList.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AnimeController : ControllerBase
+    public class AnimeController(IAnimeService animeService) : ControllerBase
     {
-        private readonly IAnimeService _animeService;
-
-        public AnimeController(IAnimeService animeService)
-        {
-            _animeService = animeService;
-        }
+        private readonly IAnimeService _animeService = animeService;
 
         [HttpGet("season/{year:int}/{season}")]
         public async Task<ActionResult<List<Anime>>> GetSeason(int year, AnimeSeason season)

@@ -3,16 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimeList.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<FanSub> FanSubs { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Studio> Studios { get; set; }
         public DbSet<Anime> Animes { get; set; }
-
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

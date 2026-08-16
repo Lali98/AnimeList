@@ -3,14 +3,9 @@ using AnimeList.Service;
 
 namespace AnimeList.Commands
 {
-    public class ImportCommand
+    public class ImportCommand(AnimeImportService importService)
     {
-        private readonly AnimeImportService _importService;
-
-        public ImportCommand(AnimeImportService importService)
-        {
-            _importService = importService;
-        }
+        private readonly AnimeImportService _importService = importService;
 
         public async Task ExecuteAsync(string[] args)
         {

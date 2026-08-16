@@ -6,18 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimeList.Service
 {
-    public class AnimeImportService
+    public class AnimeImportService(MalApiService mal, AnimeMapper mapper, AppDbContext db)
     {
-        private readonly MalApiService _mal;
-        private readonly AnimeMapper _mapper;
-        private readonly AppDbContext _db;
-
-        public AnimeImportService(MalApiService mal, AnimeMapper mapper, AppDbContext db)
-        {
-            _mal = mal;
-            _mapper = mapper;
-            _db = db;
-        }
+        private readonly MalApiService _mal = mal;
+        private readonly AnimeMapper _mapper = mapper;
+        private readonly AppDbContext _db = db;
 
         public async Task ImportSeasonAsync(int year, AnimeSeason season)
         {
@@ -27,7 +20,7 @@ namespace AnimeList.Service
             foreach (var dto in response.Data)
             {
                 var anime = _mapper.ToEntity(dto.Node);
-                if (anime.Year != year)
+                if (anime.Year != year || anime.Season != season)
                     continue;
                 anime.Genres = await GetGenresAsync(dto.Node.Genres);
                 anime.Studios = await GetStudiosAsync(dto.Node.Studios);
