@@ -30,6 +30,7 @@ builder.Services.AddHttpClient<MalApiService>(client =>
 //Services
 builder.Services.AddScoped<AnimeImportService>();
 builder.Services.AddScoped<IAnimeService, AnimeService>();
+builder.Services.AddScoped<IFanSubService, FanSubService>();
 builder.Services.AddScoped<UpdateAnimeService>();
 
 //Commands

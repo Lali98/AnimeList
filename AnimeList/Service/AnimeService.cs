@@ -48,7 +48,24 @@ namespace AnimeList.Service
                             Id = s.Id,
                             Name = s.Name
                         })
-                        .ToList()
+                        .ToList(),
+
+                    FanSubs = x.FanSubs
+                        .Select(f => new FanSubResponseDto
+                        {
+                            Id = f.Id,
+                            Name= f.Name,
+                            Description = f.Description,
+                            Links = new LinkResponseDto
+                            {
+                                YouTube = f.Links.Youtube,
+                                Discord = f.Links.Discord,
+                                WebSite = f.Links.WebSite,
+                                IndaVideo = f.Links.IndaVideo,
+                                Videa = f.Links.Videa,
+                            }
+                        })
+                        .ToList(),
                 })
                 .ToListAsync();
         }
@@ -84,6 +101,22 @@ namespace AnimeList.Service
                             Id = s.Id,
                             Name = s.Name
                         })
+                        .ToList(),
+                    FanSubs = x.FanSubs
+                        .Select(f => new FanSubResponseDto
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            Description = f.Description,
+                            Links = new LinkResponseDto
+                            {
+                                YouTube = f.Links.Youtube,
+                                Discord = f.Links.Discord,
+                                WebSite = f.Links.WebSite,
+                                IndaVideo = f.Links.IndaVideo,
+                                Videa = f.Links.Videa,
+                            }
+                        })
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
@@ -117,6 +150,22 @@ namespace AnimeList.Service
                         {
                             Id = s.Id,
                             Name = s.Name
+                        })
+                        .ToList(),
+                    FanSubs = x.FanSubs
+                        .Select(f => new FanSubResponseDto
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            Description = f.Description,
+                            Links = new LinkResponseDto
+                            {
+                                YouTube = f.Links.Youtube,
+                                Discord = f.Links.Discord,
+                                WebSite = f.Links.WebSite,
+                                IndaVideo = f.Links.IndaVideo,
+                                Videa = f.Links.Videa,
+                            }
                         })
                         .ToList()
                 })

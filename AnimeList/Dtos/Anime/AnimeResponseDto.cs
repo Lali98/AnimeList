@@ -19,5 +19,6 @@ namespace AnimeList.Dtos.Anime
 
         public List<GenreResponseDto> Genres { get; set; } = [];
         public List<StudioResponseDto> Studios { get; set; } = [];
+        public List<FanSubResponseDto> FanSubs { get; set; } = [];
     }
 }
