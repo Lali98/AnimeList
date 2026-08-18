@@ -10,11 +10,11 @@ namespace AnimeList.Data.Configurations
             EntityTypeBuilder<FanSub> builder)
         {
             builder.Property(x => x.Name)
-                .HasMaxLength(100)
+                .HasMaxLength(500)
                 .IsRequired();
 
             builder.Property(x => x.Description)
-                .HasMaxLength(1000);
+                .HasColumnType("text");
 
             builder.ComplexProperty(x => x.Links)
                 .ToJson();
