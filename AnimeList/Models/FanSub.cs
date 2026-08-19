@@ -6,7 +6,9 @@
         public string? Description { get; set; }
         public Link Links { get; set; } = new();
 
-        public List<Anime> Animes { get; set; } = [];
+        public ICollection<FanSubMember> Members { get; set; } = [];
+
+        public ICollection<Anime> Animes { get; set; } = [];
     }
 
     public class Link
